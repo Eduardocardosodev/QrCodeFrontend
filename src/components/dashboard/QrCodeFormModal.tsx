@@ -26,6 +26,7 @@ type QrCodeFormModalProps = {
     name: string
     destinationUrl: string
     folder: string
+    address: string
     color: string
   }) => Promise<void>
   onSubmitBatch?: (values: {
@@ -33,6 +34,7 @@ type QrCodeFormModalProps = {
     quantity: number
     destinationUrl: string
     folderId: string
+    address: string
     color: string
   }) => Promise<void>
 }
@@ -63,6 +65,7 @@ export function QrCodeFormModal({
   const [prefix, setPrefix] = useState('')
   const [quantity, setQuantity] = useState('1')
   const [destinationUrl, setDestinationUrl] = useState('')
+  const [address, setAddress] = useState('')
   const [folder, setFolder] = useState('')
   const [folderId, setFolderId] = useState('')
   const [color, setColor] = useState(DEFAULT_QR_COLOR)
@@ -80,6 +83,7 @@ export function QrCodeFormModal({
       setCreateVariant('single')
       setName(qrCode.name)
       setDestinationUrl(qrCode.destinationUrl)
+      setAddress(qrCode.address ?? '')
       setFolder(qrCode.folder)
       setColor(qrCode.color)
     } else {
@@ -88,6 +92,7 @@ export function QrCodeFormModal({
       setPrefix('')
       setQuantity('1')
       setDestinationUrl('')
+      setAddress('')
       setFolder('')
       setFolderId(defaultFolderId)
       setColor(DEFAULT_QR_COLOR)
@@ -169,6 +174,7 @@ export function QrCodeFormModal({
           quantity: Number.parseInt(quantity, 10),
           destinationUrl: destinationUrl.trim(),
           folderId,
+          address: address.trim(),
           color: color.trim() || DEFAULT_QR_COLOR,
         })
       } else {
@@ -176,6 +182,7 @@ export function QrCodeFormModal({
           name: name.trim(),
           destinationUrl: destinationUrl.trim(),
           folder: folder.trim(),
+          address: address.trim(),
           color: color.trim() || DEFAULT_QR_COLOR,
         })
       }
@@ -263,6 +270,13 @@ export function QrCodeFormModal({
               placeholder="#000000"
             />
             <p className="qr-form__hint">Padrão: preto (#000000)</p>
+            <Input
+              label="Endereço (opcional)"
+              name="address"
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+              placeholder="Ex.: Avenida Central, 200"
+            />
           </>
         ) : null}
 
@@ -337,6 +351,13 @@ export function QrCodeFormModal({
               placeholder="#000000"
             />
             <p className="qr-form__hint">Padrão: preto (#000000)</p>
+            <Input
+              label="Endereço (opcional)"
+              name="address"
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+              placeholder="Ex.: Avenida Central, 200"
+            />
           </>
         ) : null}
 

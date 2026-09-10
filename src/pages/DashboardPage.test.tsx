@@ -150,8 +150,34 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Promoção')).toBeInTheDocument()
     expect(screen.queryByText('Cardápio')).not.toBeInTheDocument()
 
-    await user.click(screen.getByRole('tab', { name: 'Todos' }))
+    await user.click(screen.getAllByRole('tab', { name: 'Todos' })[1])
     expect(screen.getByText('Cardápio')).toBeInTheDocument()
+  })
+
+  it('filtra QR Codes por uso', async () => {
+    const user = userEvent.setup()
+    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue({
+      items: [],
+      page: 1,
+      limit: 20,
+      total: 0,
+      totalPages: 0,
+    })
+
+    renderWithProviders(<DashboardPage />, { initialEntries: ['/dashboard'] })
+
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Em uso' })).toBeInTheDocument()
+    })
+    await user.click(screen.getByRole('tab', { name: 'Em uso' }))
+
+    await waitFor(() => {
+      expect(qrCodeService.listQrCodes).toHaveBeenLastCalledWith({
+        page: 1,
+        limit: 20,
+        isInUse: true,
+      })
+    })
   })
 
   it('troca de página e recarrega os QR Codes', async () => {
@@ -213,6 +239,7 @@ describe('DashboardPage', () => {
         name: 'Cardápio',
         destinationUrl: 'https://example.com/menu',
         folder: 'Clientes',
+        address: '',
         color: '#000000',
       })
     })
@@ -252,6 +279,7 @@ describe('DashboardPage', () => {
         quantity: 2,
         destinationUrl: 'https://example.com/padrao',
         folderId: 'folder-1',
+        address: '',
         color: '#000000',
       })
     })

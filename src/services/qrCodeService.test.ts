@@ -113,6 +113,20 @@ describe('qrCodeService', () => {
     expect(result.totalPages).toBe(3)
   })
 
+  it('filtra QR Codes em uso', async () => {
+    vi.mocked(apiRequest).mockResolvedValue({
+      items: [],
+      page: 1,
+      limit: 20,
+      total: 0,
+      totalPages: 0,
+    })
+
+    await listQrCodes({ isInUse: true })
+
+    expect(apiRequest).toHaveBeenCalledWith('/qr-codes?page=1&limit=20&isInUse=true')
+  })
+
   it('cria QR Code sem enviar cor padrão', async () => {
     vi.mocked(apiRequest).mockResolvedValue(mockQrCode)
 

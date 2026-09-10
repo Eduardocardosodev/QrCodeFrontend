@@ -78,7 +78,9 @@ describe('useQrCodeDetails', () => {
     })
 
     await act(async () => {
-      await result.current.updateDestinationUrl('https://example.com/novo')
+      await result.current.updateDestinationUrl({
+        destinationUrl: 'https://example.com/novo',
+      })
     })
 
     expect(result.current.qrCode?.destinationUrl).toBe('https://example.com/novo')

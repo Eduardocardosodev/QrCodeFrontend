@@ -27,12 +27,15 @@ const QR_CODE_ENDPOINTS = {
 } as const
 
 export async function listQrCodes(
-  options: { page?: number; limit?: number } = {},
+  options: { page?: number; limit?: number; isInUse?: boolean } = {},
 ): Promise<PaginatedQrCodes> {
   const params = new URLSearchParams({
     page: String(options.page ?? 1),
     limit: String(options.limit ?? 20),
   })
+  if (options.isInUse !== undefined) {
+    params.set('isInUse', String(options.isInUse))
+  }
   return apiRequest<PaginatedQrCodes>(`${QR_CODE_ENDPOINTS.list}?${params.toString()}`)
 }
 

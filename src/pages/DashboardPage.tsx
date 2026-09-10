@@ -6,6 +6,7 @@ import { FolderFormModal } from '../components/dashboard/FolderFormModal.tsx'
 import { Pagination } from '../components/dashboard/Pagination.tsx'
 import { QrCodeCard } from '../components/dashboard/QrCodeCard.tsx'
 import { QrCodeFormModal } from '../components/dashboard/QrCodeFormModal.tsx'
+import { UsageFilter } from '../components/dashboard/UsageFilter.tsx'
 import { Button } from '../components/ui/Button.tsx'
 import { useAnalytics } from '../hooks/useAnalytics.ts'
 import { useQrCodes } from '../hooks/useQrCodes.ts'
@@ -20,6 +21,8 @@ export function DashboardPage() {
     availableFolders,
     selectedFolder,
     setSelectedFolder,
+    usageFilter,
+    setUsageFilter,
     isLoading,
     isFoldersLoading,
     error,
@@ -50,6 +53,7 @@ export function DashboardPage() {
     name: string
     destinationUrl: string
     folder: string
+    address: string
     color: string
   }) {
     try {
@@ -57,6 +61,7 @@ export function DashboardPage() {
         name: values.name,
         destinationUrl: values.destinationUrl,
         folder: values.folder,
+        address: values.address,
         color: values.color || DEFAULT_QR_COLOR,
       })
       await reloadSummary()
@@ -72,6 +77,7 @@ export function DashboardPage() {
     quantity: number
     destinationUrl: string
     folderId: string
+    address: string
     color: string
   }) {
     try {
@@ -80,6 +86,7 @@ export function DashboardPage() {
         quantity: values.quantity,
         destinationUrl: values.destinationUrl,
         folderId: values.folderId,
+        address: values.address,
         color: values.color || DEFAULT_QR_COLOR,
       })
       await reloadSummary()
@@ -119,11 +126,14 @@ export function DashboardPage() {
       </header>
 
       {!isLoading && !error ? (
-        <FolderFilter
-          folders={folders}
-          selectedFolder={selectedFolder}
-          onChange={setSelectedFolder}
-        />
+        <>
+          <UsageFilter value={usageFilter} onChange={setUsageFilter} />
+          <FolderFilter
+            folders={folders}
+            selectedFolder={selectedFolder}
+            onChange={setSelectedFolder}
+          />
+        </>
       ) : null}
 
       {isLoading ? (

@@ -87,4 +87,10 @@ describe('qrCodePayload', () => {
       destinationUrl: 'https://novo-destino.com',
     })
   })
+
+  it('monta payload para marcar QR Code como em uso', () => {
+    expect(
+      buildUpdateQrCodePayload({ isInUse: true }),
+    ).toEqual({ isInUse: true })
+  })
 })

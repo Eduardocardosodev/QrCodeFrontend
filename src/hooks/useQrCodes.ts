@@ -12,12 +12,14 @@ import type {
 } from '../types/qrCode.ts'
 
 export type FolderFilter = 'all' | string
+export type UsageFilter = 'all' | 'inUse' | 'available'
 const QR_CODES_PAGE_SIZE = 20
 
 export function useQrCodes() {
   const [qrCodes, setQrCodes] = useState<QrCode[]>([])
   const [availableFolders, setAvailableFolders] = useState<Folder[]>([])
   const [selectedFolder, setSelectedFolder] = useState<FolderFilter>('all')
+  const [usageFilter, setUsageFilter] = useState<UsageFilter>('all')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState<Pick<PaginatedQrCodes, 'page' | 'limit' | 'total' | 'totalPages'>>({
     page: 1,
@@ -57,6 +59,7 @@ export function useQrCodes() {
       const data = await qrCodeService.listQrCodes({
         page,
         limit: QR_CODES_PAGE_SIZE,
+        ...(usageFilter === 'all' ? {} : { isInUse: usageFilter === 'inUse' }),
       })
       setQrCodes(data.items)
       setPagination({
@@ -74,7 +77,7 @@ export function useQrCodes() {
     } finally {
       setIsLoading(false)
     }
-  }, [page])
+  }, [page, usageFilter])
 
   useEffect(() => {
     void loadQrCodes()
@@ -102,6 +105,11 @@ export function useQrCodes() {
       setPage(nextPage)
     }
   }, [pagination.totalPages])
+
+  const changeUsageFilter = useCallback((nextFilter: UsageFilter) => {
+    setUsageFilter(nextFilter)
+    setPage(1)
+  }, [])
 
   const createQrCode = useCallback(async (payload: CreateQrCodePayload) => {
     const created = await qrCodeService.createQrCode(payload)
@@ -139,6 +147,8 @@ export function useQrCodes() {
     availableFolders,
     selectedFolder,
     setSelectedFolder,
+    usageFilter,
+    setUsageFilter: changeUsageFilter,
     totalCount: qrCodes.length,
     isLoading,
     isFoldersLoading,

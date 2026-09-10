@@ -3,7 +3,7 @@ import * as analyticsService from '../services/analyticsService.ts'
 import * as qrCodeService from '../services/qrCodeService.ts'
 import { ApiClientError } from '../services/apiClient.ts'
 import type { AnalyticsMetrics, PaginatedScanEvents } from '../types/analytics.ts'
-import type { QrCode } from '../types/qrCode.ts'
+import type { QrCode, UpdateQrCodePayload } from '../types/qrCode.ts'
 import {
   getDateRangeForPreset,
   resolveAnalyticsDateRange,
@@ -133,12 +133,12 @@ export function useQrCodeDetails(qrCodeId: string | undefined) {
     setPage(nextPage)
   }, [])
 
-  const updateDestinationUrl = useCallback(async (destinationUrl: string) => {
+  const updateDestinationUrl = useCallback(async (payload: UpdateQrCodePayload) => {
     if (!qrCode) {
       return null
     }
 
-    const updated = await qrCodeService.updateQrCode(qrCode.id, { destinationUrl })
+    const updated = await qrCodeService.updateQrCode(qrCode.id, payload)
     setQrCode(updated)
     return updated
   }, [qrCode])

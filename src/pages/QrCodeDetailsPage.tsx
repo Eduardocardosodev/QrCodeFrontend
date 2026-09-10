@@ -31,9 +31,13 @@ export function QrCodeDetailsPage() {
     reload,
   } = useQrCodeDetails(id)
 
-  async function handleSave(destinationUrl: string) {
+  async function handleSave(values: {
+    name: string
+    destinationUrl: string
+    address: string
+  }) {
     try {
-      await updateDestinationUrl(destinationUrl)
+      await updateDestinationUrl(values)
     } catch (err) {
       throw err instanceof ApiClientError
         ? err

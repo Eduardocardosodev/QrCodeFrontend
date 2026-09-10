@@ -112,7 +112,7 @@ describe('QrCodeDetailsPage', () => {
     expect(await screen.findByText('Scans por dia')).toBeInTheDocument()
     expect(screen.getByText('Países')).toBeInTheDocument()
     expect(screen.getByLabelText('URL de destino')).toBeInTheDocument()
-    expect(screen.getByLabelText('Nome')).toHaveAttribute('readonly')
+    expect(screen.getByLabelText('Nome')).not.toHaveAttribute('readonly')
     expect(screen.getByLabelText('Pasta')).toHaveAttribute('readonly')
   })
 
@@ -133,7 +133,9 @@ describe('QrCodeDetailsPage', () => {
 
     await waitFor(() => {
       expect(qrCodeService.updateQrCode).toHaveBeenCalledWith('1', {
+        name: 'Cardápio',
         destinationUrl: 'https://example.com/novo',
+        address: '',
       })
     })
   })

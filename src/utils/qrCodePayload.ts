@@ -18,6 +18,7 @@ export function buildCreateQrCodePayload(payload: CreateQrCodePayload): {
   name: string
   destinationUrl: string
   folder: string
+  address?: string
   color?: string
 } {
   const name = payload.name.trim()
@@ -40,11 +41,16 @@ export function buildCreateQrCodePayload(payload: CreateQrCodePayload): {
     name: string
     destinationUrl: string
     folder: string
+    address?: string
     color?: string
   } = {
     name,
     destinationUrl,
     folder,
+  }
+  const address = payload.address?.trim()
+  if (address) {
+    body.address = address
   }
 
   const color = payload.color?.trim() || DEFAULT_QR_COLOR
@@ -59,15 +65,47 @@ export function buildCreateQrCodePayload(payload: CreateQrCodePayload): {
 }
 
 export function buildUpdateQrCodePayload(payload: UpdateQrCodePayload): {
-  destinationUrl: string
+  name?: string
+  destinationUrl?: string
+  address?: string
+  isInUse?: boolean
 } {
-  const destinationUrl = payload.destinationUrl.trim()
+  const body: {
+    name?: string
+    destinationUrl?: string
+    address?: string
+    isInUse?: boolean
+  } = {}
 
-  if (!destinationUrl) {
-    throw new QrCodePayloadError('Informe a URL de destino.')
+  if (payload.name !== undefined) {
+    const name = payload.name.trim()
+    if (!name) {
+      throw new QrCodePayloadError('Informe o nome do QR Code.')
+    }
+    body.name = name
   }
 
-  return { destinationUrl }
+  if (payload.destinationUrl !== undefined) {
+    const destinationUrl = payload.destinationUrl.trim()
+    if (!destinationUrl) {
+      throw new QrCodePayloadError('Informe a URL de destino.')
+    }
+    body.destinationUrl = destinationUrl
+  }
+
+  if (payload.isInUse !== undefined) {
+    body.isInUse = payload.isInUse
+  }
+
+  if (payload.address !== undefined) {
+    body.address = payload.address.trim()
+  }
+
+  if (Object.keys(body).length === 0) {
+    throw new QrCodePayloadError('Informe uma alteração para o QR Code.')
+  }
+
+  return body
 }
 
 export function buildCreateQrCodeBatchPayload(payload: CreateQrCodeBatchPayload): {
@@ -75,6 +113,7 @@ export function buildCreateQrCodeBatchPayload(payload: CreateQrCodeBatchPayload)
   quantity: number
   destinationUrl: string
   folderId: string
+  address?: string
   color?: string
 } {
   const prefix = payload.prefix.trim()
@@ -106,12 +145,17 @@ export function buildCreateQrCodeBatchPayload(payload: CreateQrCodeBatchPayload)
     quantity: number
     destinationUrl: string
     folderId: string
+    address?: string
     color?: string
   } = {
     prefix,
     quantity: payload.quantity,
     destinationUrl,
     folderId,
+  }
+  const address = payload.address?.trim()
+  if (address) {
+    body.address = address
   }
 
   const color = payload.color?.trim() || DEFAULT_QR_COLOR

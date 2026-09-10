@@ -21,10 +21,12 @@ export type QrCode = {
   id: string
   name: string
   destinationUrl: string
+  address?: string | null
   folder: string
   color: string
   publicUrl: string
   createdAt: string
+  isInUse?: boolean
 }
 
 export type PaginatedQrCodes = {
@@ -39,11 +41,15 @@ export type CreateQrCodePayload = {
   name: string
   destinationUrl: string
   folder: string
+  address?: string
   color?: string
 }
 
 export type UpdateQrCodePayload = {
-  destinationUrl: string
+  name?: string
+  destinationUrl?: string
+  address?: string
+  isInUse?: boolean
 }
 
 export type CreateQrCodeBatchPayload = {
@@ -51,6 +57,7 @@ export type CreateQrCodeBatchPayload = {
   quantity: number
   destinationUrl: string
   folderId: string
+  address?: string
   color?: string
 }
 

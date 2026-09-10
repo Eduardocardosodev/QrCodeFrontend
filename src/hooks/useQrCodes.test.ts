@@ -126,6 +126,35 @@ describe('useQrCodes', () => {
     expect(result.current.page).toBe(2)
   })
 
+  it('recarrega a lista ao trocar o filtro de uso', async () => {
+    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue({
+      items: [],
+      page: 1,
+      limit: 20,
+      total: 0,
+      totalPages: 0,
+    })
+    vi.mocked(qrCodeService.listFolders).mockResolvedValue(mockFolders)
+
+    const { result } = renderHook(() => useQrCodes())
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false)
+    })
+
+    await act(async () => {
+      result.current.setUsageFilter('inUse')
+    })
+
+    await waitFor(() => {
+      expect(qrCodeService.listQrCodes).toHaveBeenLastCalledWith({
+        page: 1,
+        limit: 20,
+        isInUse: true,
+      })
+    })
+  })
+
   it('adiciona QR Codes criados em lote à lista', async () => {
     vi.mocked(qrCodeService.listQrCodes).mockResolvedValue({
       items: [],

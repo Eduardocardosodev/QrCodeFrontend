@@ -107,6 +107,7 @@ describe('QrCodeFormModal', () => {
       quantity: 3,
       destinationUrl: 'https://example.com/padrao',
       folderId: 'folder-1',
+      address: '',
       color: '#000000',
     })
   })
