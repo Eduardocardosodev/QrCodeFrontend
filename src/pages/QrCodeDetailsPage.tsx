@@ -10,6 +10,7 @@ import { Button } from '../components/ui/Button.tsx'
 import { useQrCodeDetails } from '../hooks/useQrCodeDetails.ts'
 import { ApiClientError } from '../services/apiClient.ts'
 import { buildQrCodeImageUrl } from '../utils/qrCodeImage.ts'
+import { getQrCodeSlug } from '../utils/qrCodeSlug.ts'
 
 export function QrCodeDetailsPage() {
   const navigate = useNavigate()
@@ -63,6 +64,7 @@ export function QrCodeDetailsPage() {
   }
 
   const qrImageUrl = buildQrCodeImageUrl(qrCode.publicUrl, qrCode.color)
+  const slug = getQrCodeSlug(qrCode.publicUrl)
 
   return (
     <div className="dashboard-page qr-details-page">
@@ -92,6 +94,7 @@ export function QrCodeDetailsPage() {
               alt={`QR Code de ${qrCode.name}`}
               className="qr-details-preview__image"
             />
+            <p className="qr-details-preview__slug">{slug}</p>
           </div>
 
           <QrCodeDownloadActions qrCode={qrCode} />

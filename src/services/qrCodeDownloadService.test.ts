@@ -34,6 +34,7 @@ describe('qrCodeDownloadService', () => {
       publicUrl: 'http://localhost:3000/redirects/abc',
       color: '#000000',
       fileName: 'Cardápio',
+      slug: 'abc',
     })
 
     expect(HTMLAnchorElement.prototype.click).toHaveBeenCalled()
@@ -44,6 +45,7 @@ describe('qrCodeDownloadService', () => {
       publicUrl: 'http://localhost:3000/redirects/abc',
       color: '#000000',
       fileName: 'Cardápio',
+      slug: 'abc',
     })
 
     expect(globalThis.URL.createObjectURL).toHaveBeenCalled()
@@ -57,6 +59,7 @@ describe('qrCodeDownloadService', () => {
       publicUrl: 'http://localhost:3000/redirects/abc',
       color: '#000000',
       fileName: 'Cardápio',
+      slug: 'abc',
     })
 
     expect(jsPDF).toHaveBeenCalled()

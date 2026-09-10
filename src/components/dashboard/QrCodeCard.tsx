@@ -2,6 +2,7 @@ import { ExternalLink } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import type { QrCode } from '../../types/qrCode.ts'
 import { buildQrCodeImageUrl } from '../../utils/qrCodeImage.ts'
+import { getQrCodeSlug } from '../../utils/qrCodeSlug.ts'
 
 type QrCodeCardProps = {
   qrCode: QrCode
@@ -11,6 +12,9 @@ type QrCodeCardProps = {
 export function QrCodeCard({ qrCode, scanCount }: QrCodeCardProps) {
   const navigate = useNavigate()
   const qrImageUrl = buildQrCodeImageUrl(qrCode.publicUrl, qrCode.color)
+  const slug = getQrCodeSlug(qrCode.publicUrl)
+  const displayName =
+    qrCode.name.length > 30 ? `${qrCode.name.slice(0, 30)}...` : qrCode.name
 
   function handleOpenDetails() {
     navigate(`/dashboard/qr-codes/${qrCode.id}`)
@@ -41,8 +45,13 @@ export function QrCodeCard({ qrCode, scanCount }: QrCodeCardProps) {
 
       <div className="qr-card__content">
         <div className="qr-card__header">
-          <h3 className="qr-card__name">{qrCode.name}</h3>
+          <h3 className="qr-card__name" title={qrCode.name}>{displayName}</h3>
           <span className="qr-card__folder">{qrCode.folder}</span>
+        </div>
+
+        <div className="qr-card__field">
+          <span className="qr-card__label">Slug</span>
+          <code className="qr-card__slug">{slug}</code>
         </div>
 
         <div className="qr-card__field">

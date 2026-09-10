@@ -7,6 +7,7 @@ import {
   downloadQrCodeSvg,
 } from '../../services/qrCodeDownloadService.ts'
 import { Button } from '../ui/Button.tsx'
+import { getQrCodeSlug } from '../../utils/qrCodeSlug.ts'
 
 type QrCodeDownloadActionsProps = {
   qrCode: QrCode
@@ -27,6 +28,7 @@ export function QrCodeDownloadActions({ qrCode }: QrCodeDownloadActionsProps) {
         publicUrl: qrCode.publicUrl,
         color: qrCode.color,
         fileName: qrCode.name,
+        slug: getQrCodeSlug(qrCode.publicUrl),
       }
 
       if (format === 'png') {

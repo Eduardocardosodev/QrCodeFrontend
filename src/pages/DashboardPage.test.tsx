@@ -180,6 +180,25 @@ describe('DashboardPage', () => {
     })
   })
 
+  it('busca QR Codes por nome ou slug', async () => {
+    const user = userEvent.setup()
+    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue(paginatedQrCodes)
+
+    renderWithProviders(<DashboardPage />, { initialEntries: ['/dashboard'] })
+
+    await screen.findByText('Cardápio')
+    const search = screen.getByRole('searchbox', { name: 'Buscar QR Code' })
+
+    await user.type(search, 'def45uvw')
+    expect(screen.getByText('Promoção')).toBeInTheDocument()
+    expect(screen.queryByText('Cardápio')).not.toBeInTheDocument()
+
+    await user.clear(search)
+    await user.type(search, 'cardápio')
+    expect(screen.getByText('Cardápio')).toBeInTheDocument()
+    expect(screen.queryByText('Promoção')).not.toBeInTheDocument()
+  })
+
   it('troca de página e recarrega os QR Codes', async () => {
     const user = userEvent.setup()
     vi.mocked(qrCodeService.listQrCodes)

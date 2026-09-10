@@ -12,6 +12,7 @@ import { useAnalytics } from '../hooks/useAnalytics.ts'
 import { useQrCodes } from '../hooks/useQrCodes.ts'
 import { ApiClientError } from '../services/apiClient.ts'
 import { DEFAULT_QR_COLOR } from '../types/qrCode.ts'
+import { getQrCodeSlug } from '../utils/qrCodeSlug.ts'
 
 export function DashboardPage() {
   const { user, logout } = useAuth()
@@ -44,6 +45,7 @@ export function DashboardPage() {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
 
   async function handleRefresh() {
     await Promise.all([reloadQrCodes(), reloadAnalytics()])
@@ -97,6 +99,15 @@ export function DashboardPage() {
     }
   }
 
+  const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase('pt-BR')
+  const visibleQrCodes = normalizedSearchTerm
+    ? filteredQrCodes.filter((qrCode) => {
+        const name = qrCode.name.toLocaleLowerCase('pt-BR')
+        const slug = getQrCodeSlug(qrCode.publicUrl).toLocaleLowerCase('pt-BR')
+        return name.includes(normalizedSearchTerm) || slug.includes(normalizedSearchTerm)
+      })
+    : filteredQrCodes
+
   return (
     <div className="dashboard-page">
       <header className="dashboard-page__header">
@@ -133,6 +144,19 @@ export function DashboardPage() {
             selectedFolder={selectedFolder}
             onChange={setSelectedFolder}
           />
+          <div className="dashboard-search">
+            <label className="field__label" htmlFor="qr-code-search">
+              Buscar QR Code
+            </label>
+            <input
+              id="qr-code-search"
+              className="field__input"
+              type="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Buscar por nome ou slug"
+            />
+          </div>
         </>
       ) : null}
 
@@ -143,10 +167,12 @@ export function DashboardPage() {
           <p>{error}</p>
           <Button type="button" onClick={() => void reloadQrCodes()}>Tentar novamente</Button>
         </div>
-      ) : filteredQrCodes.length === 0 ? (
+      ) : visibleQrCodes.length === 0 ? (
         <div className="dashboard-state">
           <p>
-            Você ainda não criou nenhum QR Code.
+            {searchTerm.trim()
+              ? 'Nenhum QR Code encontrado para esta busca.'
+              : 'Você ainda não criou nenhum QR Code.'}
           </p>
           <Button type="button" onClick={() => setIsCreateModalOpen(true)}>
             Criar primeiro QR Code
@@ -154,7 +180,7 @@ export function DashboardPage() {
         </div>
       ) : (
         <section className="qr-grid" aria-label="Lista de QR Codes">
-          {filteredQrCodes.map((qrCode) => (
+          {visibleQrCodes.map((qrCode) => (
             <QrCodeCard
               key={qrCode.id}
               qrCode={qrCode}
