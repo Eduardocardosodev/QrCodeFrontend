@@ -79,8 +79,20 @@ describe('QrCodeDeleteConfirmPage', () => {
       createdAt: '2026-03-09T17:00:00.000Z',
     })
     vi.mocked(qrCodeService.listQrCodes)
-      .mockResolvedValueOnce([mockQrCode])
-      .mockResolvedValue([])
+      .mockResolvedValueOnce({
+        items: [mockQrCode],
+        page: 1,
+        limit: 20,
+        total: 1,
+        totalPages: 1,
+      })
+      .mockResolvedValue({
+        items: [],
+        page: 1,
+        limit: 20,
+        total: 0,
+        totalPages: 0,
+      })
     vi.mocked(qrCodeService.deleteQrCode).mockResolvedValue(undefined)
     vi.mocked(analyticsService.getAnalyticsSummary).mockResolvedValue({
       totalScans: 0,
@@ -115,6 +127,6 @@ describe('QrCodeDeleteConfirmPage', () => {
     await waitFor(() => {
       expect(qrCodeService.deleteQrCode).toHaveBeenCalledWith('1')
     })
-    expect(await screen.findByText('Total de QR Codes')).toBeInTheDocument()
+    expect(await screen.findByText('QR Codes')).toBeInTheDocument()
   })
 })

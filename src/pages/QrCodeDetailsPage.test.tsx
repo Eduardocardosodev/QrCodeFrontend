@@ -79,7 +79,13 @@ describe('QrCodeDetailsPage', () => {
       email: 'user@example.com',
       createdAt: '2026-03-09T17:00:00.000Z',
     })
-    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue([mockQrCode])
+    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue({
+      items: [mockQrCode],
+      page: 1,
+      limit: 20,
+      total: 1,
+      totalPages: 1,
+    })
     vi.mocked(analyticsService.getAnalyticsMetrics).mockResolvedValue({
       totalScans: 820,
       byDevice: { mobile: 500, desktop: 320 },

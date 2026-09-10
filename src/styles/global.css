@@ -397,8 +397,8 @@ p {
 
 .qr-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
 }
 
 .qr-card {
@@ -425,21 +425,21 @@ p {
   background: var(--color-surface-muted);
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: 12px;
   border-bottom: 1px solid var(--color-border);
 }
 
 .qr-card__image {
-  width: 180px;
-  height: 180px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
 }
 
 .qr-card__content {
-  padding: 20px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .qr-card__header {
@@ -450,7 +450,7 @@ p {
 }
 
 .qr-card__name {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .qr-card__folder {
@@ -550,6 +550,28 @@ p {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.qr-form__tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.qr-form__tab {
+  flex: 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  padding: 10px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.qr-form__tab--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
 }
 
 .qr-form__readonly {

@@ -28,7 +28,13 @@ const mockQrCode = {
 describe('useQrCodeDetails', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue([mockQrCode])
+    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue({
+      items: [mockQrCode],
+      page: 1,
+      limit: 20,
+      total: 1,
+      totalPages: 1,
+    })
     vi.mocked(analyticsService.getAnalyticsMetrics).mockResolvedValue({
       totalScans: 820,
       byDevice: { mobile: 500 },

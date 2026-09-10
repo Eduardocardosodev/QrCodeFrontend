@@ -5,6 +5,8 @@ type PaginationProps = {
   totalPages: number
   isLoading?: boolean
   onPageChange: (page: number) => void
+  ariaLabel?: string
+  totalItems?: number
 }
 
 export function Pagination({
@@ -12,16 +14,18 @@ export function Pagination({
   totalPages,
   isLoading = false,
   onPageChange,
+  ariaLabel = 'Paginação',
+  totalItems,
 }: PaginationProps) {
   const canGoBack = page > 1
   const canGoForward = page < totalPages
 
-  if (totalPages <= 1) {
+  if (totalPages <= 0) {
     return null
   }
 
   return (
-    <nav className="pagination" aria-label="Paginação de scans">
+    <nav className="pagination" aria-label={ariaLabel}>
       <Button
         type="button"
         variant="secondary"
@@ -32,6 +36,7 @@ export function Pagination({
       </Button>
       <span className="pagination__info">
         Página {page} de {totalPages}
+        {totalItems !== undefined ? ` · ${totalItems} itens` : ''}
       </span>
       <Button
         type="button"

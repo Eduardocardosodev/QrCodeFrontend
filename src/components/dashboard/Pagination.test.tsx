@@ -18,11 +18,12 @@ describe('Pagination', () => {
     expect(onPageChange).toHaveBeenCalledWith(3)
   })
 
-  it('não renderiza com uma única página', () => {
-    const { container } = render(
+  it('exibe o estado mesmo com uma única página', () => {
+    render(
       <Pagination page={1} totalPages={1} onPageChange={vi.fn()} />,
     )
 
-    expect(container).toBeEmptyDOMElement()
+    expect(screen.getByText('Página 1 de 1')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Próxima página' })).toBeDisabled()
   })
 })

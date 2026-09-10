@@ -59,8 +59,8 @@ export function useQrCodeDetails(qrCodeId: string | undefined) {
     setError(null)
 
     try {
-      const items = await qrCodeService.listQrCodes()
-      const found = items.find((item) => item.id === qrCodeId) ?? null
+      const result = await qrCodeService.listQrCodes()
+      const found = result.items.find((item) => item.id === qrCodeId) ?? null
       setQrCode(found)
 
       if (!found) {
