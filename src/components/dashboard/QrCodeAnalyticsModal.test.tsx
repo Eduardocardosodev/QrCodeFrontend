@@ -55,6 +55,6 @@ describe('QrCodeAnalyticsModal', () => {
 
     expect(screen.getByText('Analytics: Cardápio')).toBeInTheDocument()
     expect(screen.getByText('820')).toBeInTheDocument()
-    expect(screen.getByText('Celular')).toBeInTheDocument()
+    expect(screen.getAllByText('Celular').length).toBeGreaterThan(0)
   })
 })

@@ -27,9 +27,9 @@ describe('ScanEventList', () => {
       />,
     )
 
-    expect(screen.getByText('Celular')).toBeInTheDocument()
-    expect(screen.getByText('iOS')).toBeInTheDocument()
-    expect(screen.getByText('Safari')).toBeInTheDocument()
+    expect(screen.getAllByText('Celular').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('iOS').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Safari').length).toBeGreaterThan(0)
   })
 
   it('mostra estado vazio', () => {

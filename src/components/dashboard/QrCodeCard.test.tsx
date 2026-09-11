@@ -51,7 +51,7 @@ describe('QrCodeCard', () => {
     const user = userEvent.setup()
     renderCard()
 
-    await user.click(screen.getByRole('button', { name: 'Abrir detalhes de Cardápio' }))
+    await user.click(screen.getByRole('link', { name: 'Abrir detalhes de Cardápio' }))
 
     expect(screen.getByText('Página de detalhes')).toBeInTheDocument()
   })
