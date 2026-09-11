@@ -136,6 +136,7 @@ describe('QrCodeDetailsPage', () => {
         name: 'Cardápio',
         destinationUrl: 'https://example.com/novo',
         address: '',
+        isInUse: false,
       })
     })
   })

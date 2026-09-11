@@ -10,6 +10,7 @@ type QrCodeDetailsFormProps = {
     name: string
     destinationUrl: string
     address: string
+    isInUse: boolean
   }) => Promise<void>
   onDelete: () => void
 }
@@ -22,6 +23,7 @@ export function QrCodeDetailsForm({
   const [name, setName] = useState(qrCode.name)
   const [destinationUrl, setDestinationUrl] = useState(qrCode.destinationUrl)
   const [address, setAddress] = useState(qrCode.address ?? '')
+  const [isInUse, setIsInUse] = useState(qrCode.isInUse ?? false)
   const [error, setError] = useState<string | null>(null)
   const [formError, setFormError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -30,6 +32,7 @@ export function QrCodeDetailsForm({
     setName(qrCode.name)
     setDestinationUrl(qrCode.destinationUrl)
     setAddress(qrCode.address ?? '')
+    setIsInUse(qrCode.isInUse ?? false)
     setError(null)
     setFormError(null)
   }, [qrCode])
@@ -60,6 +63,7 @@ export function QrCodeDetailsForm({
         name: name.trim(),
         destinationUrl: destinationUrl.trim(),
         address: address.trim(),
+        isInUse,
       })
     } catch (err) {
       setFormError(
@@ -113,6 +117,26 @@ export function QrCodeDetailsForm({
         readOnly
         className="field__input--readonly"
       />
+
+      <div className="qr-details-form__usage">
+        <div>
+          <span className="qr-details-form__usage-label">Status do QR Code</span>
+          <span className="qr-details-form__usage-description">
+            {isInUse ? 'Este QR Code está em uso.' : 'Este QR Code não está em uso.'}
+          </span>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={isInUse}
+          className="qr-details-form__switch"
+          data-state={isInUse ? 'checked' : 'unchecked'}
+          onClick={() => setIsInUse((current) => !current)}
+        >
+          <span className="qr-details-form__switch-thumb" aria-hidden="true" />
+          <span>{isInUse ? 'Em uso' : 'Não está em uso'}</span>
+        </button>
+      </div>
 
       <div className="qr-details-form__actions">
         <Button type="button" variant="secondary" onClick={onDelete}>

@@ -961,6 +961,66 @@ p {
   gap: 16px;
 }
 
+.qr-details-form__usage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.qr-details-form__usage-label,
+.qr-details-form__usage-description {
+  display: block;
+}
+
+.qr-details-form__usage-label {
+  font-weight: 600;
+}
+
+.qr-details-form__usage-description {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.qr-details-form__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 12px 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.qr-details-form__switch-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.qr-details-form__switch[data-state='checked'] {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.qr-details-form__switch[data-state='checked'] .qr-details-form__switch-thumb {
+  background: var(--color-primary);
+  transform: translateX(4px);
+}
+
 .qr-download-actions__label,
 .qr-details-events__title {
   font-size: 1rem;
@@ -1158,6 +1218,15 @@ p {
 
   .qr-form__tabs {
     flex-direction: column;
+  }
+
+  .qr-details-form__usage {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .qr-details-form__switch {
+    justify-content: center;
   }
 }
 

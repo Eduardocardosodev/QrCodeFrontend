@@ -36,6 +36,7 @@ export function QrCodeDetailsPage() {
     name: string
     destinationUrl: string
     address: string
+    isInUse: boolean
   }) {
     try {
       await updateDestinationUrl(values)
