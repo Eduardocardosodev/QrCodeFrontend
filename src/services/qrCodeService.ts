@@ -39,6 +39,28 @@ export async function listQrCodes(
   return apiRequest<PaginatedQrCodes>(`${QR_CODE_ENDPOINTS.list}?${params.toString()}`)
 }
 
+export async function listAllQrCodes(
+  options: { isInUse?: boolean; limit?: number } = {},
+): Promise<QrCode[]> {
+  const pageSize = options.limit ?? 100
+  let page = 1
+  let totalPages = 1
+  const items: QrCode[] = []
+
+  do {
+    const response = await listQrCodes({
+      page,
+      limit: pageSize,
+      isInUse: options.isInUse,
+    })
+    items.push(...response.items)
+    totalPages = response.totalPages
+    page += 1
+  } while (page <= totalPages)
+
+  return items
+}
+
 export async function listFolders(): Promise<Folder[]> {
   return apiRequest<Folder[]>(QR_CODE_ENDPOINTS.folders)
 }

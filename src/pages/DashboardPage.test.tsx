@@ -7,6 +7,7 @@ import { saveSession } from '../auth/sessionStorage.ts'
 import * as authService from '../services/authService.ts'
 import * as analyticsService from '../services/analyticsService.ts'
 import * as qrCodeService from '../services/qrCodeService.ts'
+import * as qrCodeDownloadService from '../services/qrCodeDownloadService.ts'
 
 vi.mock('../services/authService.ts', () => ({
   AuthServiceError: class AuthServiceError extends Error {
@@ -27,9 +28,14 @@ vi.mock('../services/authService.ts', () => ({
 
 vi.mock('../services/qrCodeService.ts', () => ({
   listQrCodes: vi.fn(),
+  listAllQrCodes: vi.fn(),
   listFolders: vi.fn(),
   createQrCode: vi.fn(),
   createQrCodesBatch: vi.fn(),
+}))
+
+vi.mock('../services/qrCodeDownloadService.ts', () => ({
+  downloadQrCodesZip: vi.fn(),
 }))
 
 vi.mock('../services/analyticsService.ts', () => ({
@@ -124,6 +130,7 @@ describe('DashboardPage', () => {
     vi.mocked(analyticsService.getAnalyticsSummary).mockResolvedValue(mockAnalyticsSummary)
     vi.mocked(analyticsService.getAnalyticsMetrics).mockResolvedValue(mockMetrics)
     vi.mocked(qrCodeService.listFolders).mockResolvedValue(mockFolders)
+    vi.mocked(qrCodeService.listAllQrCodes).mockResolvedValue(mockQrCodes)
   })
 
   it('exibe somente os cards de QR Code após carregar', async () => {
@@ -301,6 +308,50 @@ describe('DashboardPage', () => {
         address: '',
         color: '#000000',
       })
+    })
+  })
+
+  it('permite selecionar QR Codes e baixar ZIP', async () => {
+    const user = userEvent.setup()
+    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue(paginatedQrCodes)
+
+    renderWithProviders(<DashboardPage />, { initialEntries: ['/dashboard'] })
+
+    await screen.findByText('Cardápio')
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar Cardápio para download' }))
+    await user.click(screen.getByRole('button', { name: 'Baixar ZIP PNG' }))
+
+    await waitFor(() => {
+      expect(qrCodeDownloadService.downloadQrCodesZip).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            fileName: 'Cardápio',
+            slug: 'abc12xyz',
+          }),
+        ]),
+        'png',
+        'qr-codes-png.zip',
+      )
+    })
+  })
+
+  it('seleciona todos os QR Codes filtrados', async () => {
+    const user = userEvent.setup()
+    vi.mocked(qrCodeService.listQrCodes).mockResolvedValue(paginatedQrCodes)
+
+    renderWithProviders(<DashboardPage />, { initialEntries: ['/dashboard'] })
+
+    await screen.findByText('Cardápio')
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Selecionar filtrados' })).toBeEnabled()
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Selecionar filtrados' }))
+
+    await waitFor(() => {
+      expect(qrCodeService.listAllQrCodes).toHaveBeenCalled()
+      expect(screen.getByText(/2 selecionado\(s\)/)).toBeInTheDocument()
     })
   })
 

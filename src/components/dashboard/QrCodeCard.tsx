@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { ExternalLink } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { QrCode } from '../../types/qrCode.ts'
@@ -7,6 +8,8 @@ import { getQrCodeSlug } from '../../utils/qrCodeSlug.ts'
 type QrCodeCardProps = {
   qrCode: QrCode
   scanCount: number
+  isSelected?: boolean
+  onToggleSelect?: (id: string) => void
 }
 
 function truncateUrl(url: string, maxLength = 48) {
@@ -17,7 +20,12 @@ function truncateUrl(url: string, maxLength = 48) {
   return `${url.slice(0, maxLength - 1)}…`
 }
 
-export function QrCodeCard({ qrCode, scanCount }: QrCodeCardProps) {
+export function QrCodeCard({
+  qrCode,
+  scanCount,
+  isSelected = false,
+  onToggleSelect,
+}: QrCodeCardProps) {
   const qrImageUrl = buildQrCodeImageUrl(qrCode.publicUrl, qrCode.color)
   const slug = getQrCodeSlug(qrCode.publicUrl)
   const detailsPath = `/dashboard/qr-codes/${qrCode.id}`
@@ -25,7 +33,19 @@ export function QrCodeCard({ qrCode, scanCount }: QrCodeCardProps) {
     qrCode.name.length > 30 ? `${qrCode.name.slice(0, 30)}...` : qrCode.name
 
   return (
-    <article className="qr-card">
+    <article className={clsx('qr-card', isSelected && 'qr-card--selected')}>
+      {onToggleSelect ? (
+        <label className="qr-card__select">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggleSelect(qrCode.id)}
+            aria-label={`Selecionar ${qrCode.name} para download`}
+          />
+          <span>Selecionar</span>
+        </label>
+      ) : null}
+
       <Link to={detailsPath} className="qr-card__main-link" aria-label={`Abrir detalhes de ${qrCode.name}`}>
         <div className="qr-card__image-wrap">
           <img

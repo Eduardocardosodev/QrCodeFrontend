@@ -56,6 +56,32 @@ describe('QrCodeCard', () => {
     expect(screen.getByText('Página de detalhes')).toBeInTheDocument()
   })
 
+  it('alterna seleção pelo checkbox', async () => {
+    const user = userEvent.setup()
+    const onToggleSelect = vi.fn()
+
+    render(
+      <MemoryRouter initialEntries={['/dashboard']}>
+        <Routes>
+          <Route
+            path="/dashboard"
+            element={
+              <QrCodeCard
+                qrCode={mockQrCode}
+                scanCount={820}
+                isSelected={false}
+                onToggleSelect={onToggleSelect}
+              />
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar Cardápio para download' }))
+    expect(onToggleSelect).toHaveBeenCalledWith('1')
+  })
+
   it('limita nomes longos a 30 caracteres com reticências', () => {
     const longName = 'Nome de QR Code com mais de trinta caracteres'
     renderCard({ ...mockQrCode, name: longName })

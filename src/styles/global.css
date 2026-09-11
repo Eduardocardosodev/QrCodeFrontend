@@ -422,6 +422,28 @@ p {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.qr-card--selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.qr-card__select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.qr-card__select input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
 }
 
 .qr-card__main-link {
@@ -534,6 +556,41 @@ p {
 .dashboard-search {
   max-width: 420px;
   margin: 0 0 16px;
+}
+
+.qr-bulk-download {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.qr-bulk-download__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qr-bulk-download__hint {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.qr-bulk-download__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.qr-bulk-download__error {
+  color: var(--color-danger);
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 .qr-card__scans {
@@ -1061,6 +1118,15 @@ p {
 
   .dashboard-search {
     max-width: none;
+  }
+
+  .qr-bulk-download__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .qr-bulk-download__actions .button {
+    width: 100%;
   }
 
   .scan-event-list--mobile {

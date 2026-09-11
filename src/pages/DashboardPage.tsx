@@ -4,11 +4,13 @@ import { useAuth } from '../auth/useAuth.ts'
 import { FolderFilter } from '../components/dashboard/FolderFilter.tsx'
 import { FolderFormModal } from '../components/dashboard/FolderFormModal.tsx'
 import { Pagination } from '../components/dashboard/Pagination.tsx'
+import { QrCodeBulkDownloadBar } from '../components/dashboard/QrCodeBulkDownloadBar.tsx'
 import { QrCodeCard } from '../components/dashboard/QrCodeCard.tsx'
 import { QrCodeFormModal } from '../components/dashboard/QrCodeFormModal.tsx'
 import { UsageFilter } from '../components/dashboard/UsageFilter.tsx'
 import { Button } from '../components/ui/Button.tsx'
 import { useAnalytics } from '../hooks/useAnalytics.ts'
+import { useQrCodeSelection } from '../hooks/useQrCodeSelection.ts'
 import { useQrCodes } from '../hooks/useQrCodes.ts'
 import { ApiClientError } from '../services/apiClient.ts'
 import { DEFAULT_QR_COLOR } from '../types/qrCode.ts'
@@ -46,6 +48,22 @@ export function DashboardPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+
+  const {
+    selectedCount,
+    filteredCount,
+    isSelectingAll,
+    selectionError,
+    toggleSelection,
+    clearSelection,
+    selectFiltered,
+    getSelectedQrCodes,
+    isSelected,
+  } = useQrCodeSelection({
+    usageFilter,
+    selectedFolder,
+    searchTerm,
+  })
 
   async function handleRefresh() {
     await Promise.all([reloadQrCodes(), reloadAnalytics()])
@@ -157,6 +175,21 @@ export function DashboardPage() {
               placeholder="Buscar por nome ou slug"
             />
           </div>
+
+          <QrCodeBulkDownloadBar
+            selectedCount={selectedCount}
+            filteredCount={filteredCount}
+            isSelectingAll={isSelectingAll}
+            onSelectFiltered={() => void selectFiltered()}
+            onClearSelection={clearSelection}
+            getSelectedQrCodes={getSelectedQrCodes}
+          />
+
+          {selectionError ? (
+            <div className="form-alert" role="alert">
+              {selectionError}
+            </div>
+          ) : null}
         </>
       ) : null}
 
@@ -185,6 +218,8 @@ export function DashboardPage() {
               key={qrCode.id}
               qrCode={qrCode}
               scanCount={getScanCount(qrCode.id)}
+              isSelected={isSelected(qrCode.id)}
+              onToggleSelect={() => toggleSelection(qrCode)}
             />
           ))}
         </section>
