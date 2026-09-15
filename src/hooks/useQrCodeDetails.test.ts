@@ -5,6 +5,7 @@ import * as analyticsService from '../services/analyticsService.ts'
 import * as qrCodeService from '../services/qrCodeService.ts'
 
 vi.mock('../services/qrCodeService.ts', () => ({
+  findQrCodeById: vi.fn(),
   listQrCodes: vi.fn(),
   updateQrCode: vi.fn(),
   deleteQrCode: vi.fn(),
@@ -28,6 +29,7 @@ const mockQrCode = {
 describe('useQrCodeDetails', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.mocked(qrCodeService.findQrCodeById).mockResolvedValue(mockQrCode)
     vi.mocked(qrCodeService.listQrCodes).mockResolvedValue({
       items: [mockQrCode],
       page: 1,
@@ -63,6 +65,26 @@ describe('useQrCodeDetails', () => {
 
     expect(result.current.qrCode?.name).toBe('Cardápio')
     expect(result.current.metrics?.totalScans).toBe(820)
+  })
+
+  it('encontra QR Code em páginas seguintes', async () => {
+    vi.mocked(qrCodeService.findQrCodeById).mockImplementation(async () => {
+      await qrCodeService.listQrCodes({ page: 1 })
+      await qrCodeService.listQrCodes({ page: 2 })
+      return mockQrCode
+    })
+
+    const { result } = renderHook(() => useQrCodeDetails('1'))
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false)
+    })
+
+    expect(result.current.qrCode?.name).toBe('Cardápio')
+    expect(result.current.error).toBeNull()
+    expect(qrCodeService.findQrCodeById).toHaveBeenCalledWith('1')
+    expect(qrCodeService.listQrCodes).toHaveBeenNthCalledWith(1, { page: 1 })
+    expect(qrCodeService.listQrCodes).toHaveBeenNthCalledWith(2, { page: 2 })
   })
 
   it('atualiza destination URL', async () => {

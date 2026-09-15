@@ -27,6 +27,7 @@ vi.mock('../services/authService.ts', () => ({
 }))
 
 vi.mock('../services/qrCodeService.ts', () => ({
+  findQrCodeById: vi.fn(),
   listQrCodes: vi.fn(),
   updateQrCode: vi.fn(),
   deleteQrCode: vi.fn(),
@@ -79,6 +80,7 @@ describe('QrCodeDetailsPage', () => {
       email: 'user@example.com',
       createdAt: '2026-03-09T17:00:00.000Z',
     })
+    vi.mocked(qrCodeService.findQrCodeById).mockResolvedValue(mockQrCode)
     vi.mocked(qrCodeService.listQrCodes).mockResolvedValue({
       items: [mockQrCode],
       page: 1,

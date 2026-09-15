@@ -5,6 +5,7 @@ import {
   createFolder,
   deleteQrCode,
   deleteFolder,
+  findQrCodeById,
   getFolder,
   listFolders,
   listQrCodes,
@@ -125,6 +126,30 @@ describe('qrCodeService', () => {
     await listQrCodes({ isInUse: true })
 
     expect(apiRequest).toHaveBeenCalledWith('/qr-codes?page=1&limit=20&isInUse=true')
+  })
+
+  it('encontra QR Code por id percorrendo paginas', async () => {
+    vi.mocked(apiRequest)
+      .mockResolvedValueOnce({
+        items: [{ ...mockQrCode, id: 'other' }],
+        page: 1,
+        limit: 20,
+        total: 2,
+        totalPages: 2,
+      })
+      .mockResolvedValueOnce({
+        items: [mockQrCode],
+        page: 2,
+        limit: 20,
+        total: 2,
+        totalPages: 2,
+      })
+
+    const result = await findQrCodeById('1')
+
+    expect(result).toEqual(mockQrCode)
+    expect(apiRequest).toHaveBeenNthCalledWith(1, '/qr-codes?page=1&limit=20')
+    expect(apiRequest).toHaveBeenNthCalledWith(2, '/qr-codes?page=2&limit=20')
   })
 
   it('cria QR Code sem enviar cor padrão', async () => {
